@@ -1,5 +1,31 @@
 Array.prototype.remove = function(value) {
-    var idx = this.indexOf(value);
+    //var idx = this.indexOf(value);
+    var count = 0;
+    idx = -1;
+    for (var t = 0 ; t < this.length; t++) {
+        //var g=this[t].length;
+
+        if (this[t].length === undefined) {
+            if (this[t] == value) {
+                idx = t;
+                break;
+            }
+        } else {
+            if (this[t].length != value.length) {
+                return false;
+            }
+            for (var p = 0; p<this[t].length; p++) {
+                if (this[t][p] == value[p]) {
+                    count++;
+                }
+            }
+            if (count === this[t].length) {
+                idx = t;
+                break;
+            }
+            count = 0;
+        }
+    }
     if (idx != -1) {
         return this.splice(idx, 1);
     }
@@ -16,6 +42,7 @@ resetCandidate();
 
 function getSudoku(level) {
     makeValidSudoku();
+    //printSudoku(cells);
     makeSudoku(level);
     return cells;    
 }
@@ -42,7 +69,7 @@ function makeSudoku(level) {
         if (isSolvable(row, col, level) === 0) {
             cells[row][col] = memo;        
         } else {
-            printSudoku(cells);    
+            //printSudoku(cells);    
         }
     }
 }
@@ -120,6 +147,17 @@ function isSingleValueRow(memorow, memocol, value) {
             }
         }
     }
+    //document.write("<pre>isSingleValueRow</pre>");
+    //document.write("<pre>memorow: "+memorow+"</pre>");
+    //document.write("<pre>memocol: "+memocol+"</pre>");
+    //document.write("<pre>value: "+value+"</pre>");
+    //for (col = 0; col < 9; col++) {
+    //    if (col != memocol && cells[memorow][col] === '_' ) {
+    //        for (i = 0; i < cand[memorow][col].length; i++) {
+    //            document.write("<pre>cand["+memorow+"]["+col+"]: "+cand[memorow][col][i]+"</pre>");
+    //        }       
+    //    }
+    //}
     return 1;
 }
 
@@ -135,17 +173,17 @@ function isSingleValueCol(memorow, memocol, value) {
             }
         }
     }
-    document.write("<pre>isSingleValueCol</pre>");
-    document.write("<pre>memorow: "+memorow+"</pre>");
-    document.write("<pre>memocol: "+memocol+"</pre>");
-    document.write("<pre>value: "+value+"</pre>");
-    for (row = 0; row < 9; row++) {
-        if (row != memorow  && cells[row][memocol] === '_' ) {
-            for (i = 0; i < cand[row][memocol].length; i++) {
-                document.write("<pre>cand["+row+"]["+memocol+"]: "+cand[row][memocol][i]+"</pre>");
-            }       
-        }
-    }
+    //document.write("<pre>isSingleValueCol</pre>");
+    //document.write("<pre>memorow: "+memorow+"</pre>");
+    //document.write("<pre>memocol: "+memocol+"</pre>");
+    //document.write("<pre>value: "+value+"</pre>");
+    //for (row = 0; row < 9; row++) {
+    //    if (row != memorow  && cells[row][memocol] === '_' ) {
+    //        for (i = 0; i < cand[row][memocol].length; i++) {
+    //            document.write("<pre>cand["+row+"]["+memocol+"]: "+cand[row][memocol][i]+"</pre>");
+    //        }       
+    //    }
+    //}
     return 1;
 }
 
@@ -154,7 +192,7 @@ function isSingleValueBlock(memorow, memocol, value) {
     var startcol = parseInt(memocol/3)*3;;
     for (var row = startrow; row < 3 + startrow; row++) {
         for (var col = startcol; col < 3 + startcol; col++) {
-            if (cells[row][col] === '_' && row != memorow && col != memocol) {
+            if (cells[row][col] === '_' && (row != memorow || col != memocol)) {
                 for (i = 0; i < cand[row][col].length; i++) {
                     if (cand[row][col][i] === value) {
                         return 0;
@@ -163,6 +201,7 @@ function isSingleValueBlock(memorow, memocol, value) {
             }    
         }    
     }
+    //document.write("<pre>isSingleValueBlock</pre>");
     return 1;
 }
 
