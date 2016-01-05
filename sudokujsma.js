@@ -41,6 +41,8 @@ function makeSudoku(level) {
         cells[row][col] = "_";
         if (isSolvable(row, col, level) === 0) {
             cells[row][col] = memo;        
+        } else {
+            printSudoku(cells);    
         }
     }
 }
@@ -52,7 +54,8 @@ function isSolvable(memorow, memocol, level) {
     } else if (level === 1) {
         return 0;
     }
-    result = solutionHiddenSingle(memorow, memocol);
+    result = verifyHiddenSingle(memorow, memocol);
+    return result;
 }
 
 function verifyNakedSingle(memorow, memocol) {
@@ -76,8 +79,92 @@ function verifyNakedSingle(memorow, memocol) {
 } 
 
 function verifyHiddenSingle(memorow, memocol) {
-   
+    //resetCandidate();
+    //for (var row = 0; row < 9; row++) {
+    //    for (var col = 0; col < 9; col++) {
+            //delete value contained in cells[row][col] from cand[row][0-9]
+    //        deleteRowCandidate(row, cells[row][col]);
+            //delete value contained in cells[row][col] from cand[0-9][col]
+    //        deleteColCandidate(col, cells[row][col]);
+
+    //        deleteBlockCandidate(row, col, cells[row][col])
+    //    }
+    //}
+
+    for (var t = 0; t < cand[memorow][memocol].length; t++) {
+        var value = cand[memorow][memocol][t];
+        //var cellsemptyblock = getCellsEmptyBlock(indexblok);
+        //search value in confinant blocks
+        if (isSingleValueRow(memorow, memocol, value) === 1) {
+            return 1;
+        }
+        if (isSingleValueCol(memorow, memocol, value) === 1) {
+            return 1;
+        }
+        if (isSingleValueBlock(memorow, memocol, value) === 1) {
+            return 1;
+        }
+    }
+    return 0;       
 } 
+
+function isSingleValueRow(memorow, memocol, value) {
+    var col;
+    var i;
+    for (col = 0; col < 9; col++) {
+        if (col != memocol && cells[memorow][col] === '_' ) {
+            for (i = 0; i < cand[memorow][col].length; i++) {
+                if (cand[memorow][col][i] === value) {
+                    return 0;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
+function isSingleValueCol(memorow, memocol, value) {
+    var row;
+    var i;
+    for (row = 0; row < 9; row++) {
+        if (row != memorow  && cells[row][memocol] === '_' ) {
+            for (i = 0; i < cand[row][memocol].length; i++) {
+                if (cand[row][memocol][i] === value) {
+                    return 0;
+                }
+            }
+        }
+    }
+    document.write("<pre>isSingleValueCol</pre>");
+    document.write("<pre>memorow: "+memorow+"</pre>");
+    document.write("<pre>memocol: "+memocol+"</pre>");
+    document.write("<pre>value: "+value+"</pre>");
+    for (row = 0; row < 9; row++) {
+        if (row != memorow  && cells[row][memocol] === '_' ) {
+            for (i = 0; i < cand[row][memocol].length; i++) {
+                document.write("<pre>cand["+row+"]["+memocol+"]: "+cand[row][memocol][i]+"</pre>");
+            }       
+        }
+    }
+    return 1;
+}
+
+function isSingleValueBlock(memorow, memocol, value) {
+    var startrow = parseInt(memorow/3)*3;
+    var startcol = parseInt(memocol/3)*3;;
+    for (var row = startrow; row < 3 + startrow; row++) {
+        for (var col = startcol; col < 3 + startcol; col++) {
+            if (cells[row][col] === '_' && row != memorow && col != memocol) {
+                for (i = 0; i < cand[row][col].length; i++) {
+                    if (cand[row][col][i] === value) {
+                        return 0;
+                    }
+                }
+            }    
+        }    
+    }
+    return 1;
+}
 
 function makeValidSudoku() {
 

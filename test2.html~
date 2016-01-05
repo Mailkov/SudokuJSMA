@@ -1,0 +1,16 @@
+<html>
+<body>
+<script src="sudokujsma.js"></script>
+<script src="graphicjsma.js"></script>
+<script src="utilityjsma.js"></script>
+<script>
+printMilliseconds();
+//for (var t=0; t<1000; t++) {
+var cells = getSudoku(2);
+//}
+printSudoku(cells);
+printMilliseconds();
+printEmptyCells(cells);
+</script>
+</body>
+</html>
