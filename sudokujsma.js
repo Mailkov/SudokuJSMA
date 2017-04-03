@@ -1,3 +1,8 @@
+//Written by Melchiorre Alastra
+//it was distributed under the terms of
+//GNU General Public License Version 2
+//You can read the LICENSE file
+
 var sudokujsma = {
 
 Array.prototype.remove = function(value) {
